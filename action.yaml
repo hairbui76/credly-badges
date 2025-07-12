@@ -43,9 +43,7 @@ runs:
         npm ci --production
       shell: bash
     - name: Run action
-      run: |
-        cd ${{ github.action_path }}
-        node index.js
+      run: node index.js
       shell: bash
       env:
         INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
