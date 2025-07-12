@@ -1,0 +1,35 @@
+name: "Credly Badges Updater"
+description: "Automatically fetch and update README with your Credly badges"
+author: "hairbui76"
+branding:
+  icon: "award"
+  color: "green"
+
+inputs:
+  CREDLY_USER:
+    description: "Credly username"
+    required: true
+  GIT_COMMIT_MESSAGE:
+    description: "Git commit message"
+    required: false
+    default: "Update Credly badges"
+  GIT_USER_NAME:
+    description: "Git user name for commits"
+    required: false
+    default: "github-actions[bot]"
+  GIT_USER_EMAIL:
+    description: "Git user email for commits"
+    required: false
+    default: "github-actions[bot]@users.noreply.github.com"
+  BADGE_SIZE:
+    description: "Size of badge images (width and height)"
+    required: false
+    default: "80"
+  README_FILE:
+    description: "README file name"
+    required: false
+    default: "README.md"
+
+runs:
+  using: "node20"
+  main: "index.js"
