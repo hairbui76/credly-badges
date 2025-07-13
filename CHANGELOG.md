@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/hairbui76/credly-badges/compare/v1.0.6...v1.0.7) (2025-07-13)
+
+
+### Bug Fixes
+
+* **dockerfile:** Install chrome ([7c3afed](https://github.com/hairbui76/credly-badges/commit/7c3afed203921c78d82d6586d6b7554e37f84f2c))
+
 ## [1.0.6](https://github.com/hairbui76/credly-badges/compare/v1.0.5...v1.0.6) (2025-07-13)
 
 
