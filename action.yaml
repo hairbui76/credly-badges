@@ -42,7 +42,8 @@ runs:
         # Create a hidden directory for action files
         mkdir -p .github-action-temp
         cp -r ${{ github.action_path }}/* .github-action-temp/
-        ls -la .github-action-temp/
+        cd .github-action-temp
+        npm ci --production
 
     - name: Update badges using Docker
       uses: docker://ghcr.io/puppeteer/puppeteer:latest
@@ -51,14 +52,12 @@ runs:
         args: |
           bash -c "
             cd .github-action-temp
-            npm ci --production
             node index.js
           "
       env:
         INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
         INPUT_BADGE_SIZE: ${{ inputs.BADGE_SIZE }}
         INPUT_README_FILE: ${{ inputs.README_FILE }}
-        # Important: The working directory for file operations
         GITHUB_WORKSPACE: /github/workspace
 
     - name: Commit and push changes
