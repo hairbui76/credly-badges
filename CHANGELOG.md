@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/hairbui76/credly-badges/compare/v1.1.6...v1.1.7) (2025-07-13)
+
+
+### Bug Fixes
+
+* **action:** Test ([4d95ed1](https://github.com/hairbui76/credly-badges/commit/4d95ed1e7cb8dd02c86b5987f475b5eb1885351a))
+
 ## [1.1.6](https://github.com/hairbui76/credly-badges/compare/v1.1.5...v1.1.6) (2025-07-13)
 
 
