@@ -63,9 +63,6 @@ runs:
             chown $(id -u):$(id -g) /workspace/${{ inputs.README_FILE }} 2>/dev/null || true
           "
 
-        # Cleanup
-        rm -rf $TEMP_DIR
-
     - name: Check if changes were made
       id: check
       shell: bash

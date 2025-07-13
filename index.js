@@ -10,6 +10,10 @@ async function run() {
     const badgeSize = core.getInput('BADGE_SIZE') || '80';
     const readmeFile = core.getInput('README_FILE') || 'README.md';
 
+    core.info(`Credly user: ${credlyUser}`);
+    core.info(`Badge size: ${badgeSize}`);
+    core.info(`README file: ${readmeFile}`);
+
     core.info(`Fetching badges for Credly user: ${credlyUser}`);
 
     // Fetch badges
