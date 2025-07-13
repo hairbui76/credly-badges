@@ -36,24 +36,22 @@ runs:
     - name: Checkout user's repository
       uses: actions/checkout@v4
 
+    - name: Copy action files to workspace
+      shell: bash
+      run: |
+        # Create a hidden directory for action files
+        mkdir -p .github-action-temp
+        cp -r ${{ github.action_path }}/* .github-action-temp/
+        ls -la .github-action-temp/
+
     - name: Update badges using Docker
       uses: docker://ghcr.io/puppeteer/puppeteer:latest
       with:
         args: |
           bash -c "
-            pwd
-            ls -la
-            ls -la ${{ github.action_path }}
-            # Copy action files to temp directory
-            mkdir -p /tmp/action
-            cp -r ${{ github.action_path }}/* /tmp/action/
-
-            # Install dependencies in action directory
-            cd /tmp/action
+            cd .github-action-temp
             npm ci --production
-
-            # Run the action (it will modify files in /github/workspace)
-            node /tmp/action/index.js
+            node index.js
           "
       env:
         INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
