@@ -41,6 +41,8 @@ runs:
       with:
         args: |
           bash -c "
+            pwd
+            ls -la
             # Copy action files to temp directory
             mkdir -p /tmp/action
             cp -r ${{ github.action_path }}/* /tmp/action/
