@@ -37,6 +37,7 @@ runs:
       uses: actions/checkout@v4
 
     - name: Update badges using Docker
+      id: update-badges
       shell: bash
       run: |
         # Create temporary directory for action files
@@ -63,18 +64,8 @@ runs:
             chown $(id -u):$(id -g) /workspace/${{ inputs.README_FILE }} 2>/dev/null || true
           "
 
-    - name: Check if changes were made
-      id: check
-      shell: bash
-      run: |
-        if git diff --quiet ${{ inputs.README_FILE }}; then
-          echo "changes_made=false" >> $GITHUB_OUTPUT
-        else
-          echo "changes_made=true" >> $GITHUB_OUTPUT
-        fi
-
     - name: Commit and push changes
-      if: steps.check.outputs.changes_made == 'true'
+      if: steps.update-badges.outputs.changes_made == 'true'
       shell: bash
       run: |
         git config --local user.name "${{ inputs.GIT_USER_NAME }}"
