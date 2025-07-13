@@ -33,25 +33,31 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Prepare action files
-      shell: bash
-      run: |
-        # Copy action files to workspace
-        cp -r ${{ github.action_path }}/* .
+    - name: Checkout user's repository
+      uses: actions/checkout@v4
 
-    - name: Run Puppeteer in Docker
+    - name: Update badges using Docker
       uses: docker://ghcr.io/puppeteer/puppeteer:latest
       with:
         args: |
           bash -c "
-            cp -r ${{ github.action_path }}/* . &&
-            npm ci --production &&
-            node index.js
+            # Copy action files to temp directory
+            mkdir -p /tmp/action
+            cp -r ${{ github.action_path }}/* /tmp/action/
+
+            # Install dependencies in action directory
+            cd /tmp/action
+            npm ci --production
+
+            # Run the action (it will modify files in /github/workspace)
+            node /tmp/action/index.js
           "
       env:
         INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
         INPUT_BADGE_SIZE: ${{ inputs.BADGE_SIZE }}
         INPUT_README_FILE: ${{ inputs.README_FILE }}
+        # Important: The working directory for file operations
+        GITHUB_WORKSPACE: /github/workspace
 
     - name: Commit and push changes
       if: steps.check.outputs.changes_made == 'true'

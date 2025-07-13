@@ -134,7 +134,8 @@ function generateBadgesMarkdown(badgesData, size) {
 }
 
 async function updateReadme(badgesMarkdown, readmeFile) {
-  const readmePath = path.join(process.cwd(), readmeFile);
+  const workspacePath = process.env.GITHUB_WORKSPACE || process.cwd();
+  const readmePath = path.join(workspacePath, readmeFile);
   const startMarker = '<!-- CREDLY-BADGES:START -->';
   const endMarker = '<!-- CREDLY-BADGES:END -->';
 
