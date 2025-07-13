@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/hairbui76/credly-badges/compare/v1.1.0...v1.1.1) (2025-07-13)
+
+
+### Bug Fixes
+
+* **action:** Fix args puppeteer ([b688eee](https://github.com/hairbui76/credly-badges/commit/b688eeecf4053dab180ab99deec6e5ed734c5c71))
+
 ## [1.1.0](https://github.com/hairbui76/credly-badges/compare/v1.0.10...v1.1.0) (2025-07-13)
 
 
