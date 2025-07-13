@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/hairbui76/credly-badges/compare/v1.1.1...v1.1.2) (2025-07-13)
+
+
+### Bug Fixes
+
+* **action:** Fix workspace path ([ac84559](https://github.com/hairbui76/credly-badges/commit/ac84559849253427085029d7d6a5d943517dd2d2))
+
 ## [1.1.1](https://github.com/hairbui76/credly-badges/compare/v1.1.0...v1.1.1) (2025-07-13)
 
 
