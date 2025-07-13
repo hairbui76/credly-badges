@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const puppeteer = require('puppeteer');
 const fs = require('fs').promises;
-const fsSync = require('fs');
 const path = require('path');
 
 async function run() {
@@ -35,16 +34,10 @@ async function run() {
 
     if (changed) {
       core.info('README.md updated successfully!');
-      const outputFile = process.env.GITHUB_OUTPUT;
-      if (outputFile) {
-        fsSync.appendFileSync(outputFile, 'changes_made=true\n');
-      }
+      core.setOutput('changes_made', 'true');
     } else {
       core.info('No changes detected in README.md');
-      const outputFile = process.env.GITHUB_OUTPUT;
-      if (outputFile) {
-        fsSync.appendFileSync(outputFile, 'changes_made=false\n');
-      }
+      core.setOutput('changes_made', 'false');
     }
 
   } catch (error) {

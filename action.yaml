@@ -56,7 +56,7 @@ runs:
           -e GITHUB_WORKSPACE="/workspace" \
           -e RUNNING_IN_DOCKER="true" \
           --entrypoint /bin/bash \
-          ghcr.io/puppeteer/puppeteer:latest \
+          ghcr.io/puppeteer/puppeteer:24.12.1 \
           -c "
             cd /action && \
             npm ci --production && \
