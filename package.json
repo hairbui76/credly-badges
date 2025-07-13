@@ -14,7 +14,6 @@
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "^6.0.1",
-    "playwright": "^1.54.1",
     "puppeteer": "^24.12.1"
   }
 }
