@@ -30,29 +30,35 @@ inputs:
     required: false
     default: "README.md"
 
-# runs:
-#   using: "composite"
-#   steps:
-#     - name: Set up Node.js
-#       uses: actions/setup-node@v4
-#       with:
-#         node-version: "20"
-#     - name: Install dependencies
-#       run: |
-#         cd ${{ github.action_path }}
-#         npm ci --production
-#       shell: bash
-#     - name: Run action
-#       run: node index.js
-#       shell: bash
-#       env:
-#         INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
-#         INPUT_GIT_COMMIT_MESSAGE: ${{ inputs.GIT_COMMIT_MESSAGE }}
-#         INPUT_GIT_USER_NAME: ${{ inputs.GIT_USER_NAME }}
-#         INPUT_GIT_USER_EMAIL: ${{ inputs.GIT_USER_EMAIL }}
-#         INPUT_BADGE_SIZE: ${{ inputs.BADGE_SIZE }}
-#         INPUT_BADGE_STYLE: ${{ inputs.BADGE_STYLE }}
-
 runs:
-  using: docker
-  image: Dockerfile
+  using: "composite"
+  steps:
+    - name: Prepare action files
+      shell: bash
+      run: |
+        # Copy action files to workspace
+        cp -r ${{ github.action_path }}/* .
+
+    - name: Run Puppeteer in Docker
+      uses: docker://ghcr.io/puppeteer/puppeteer:latest
+      with:
+        args: |
+          bash -c "
+            cd /github/workspace &&
+            npm ci --production &&
+            node index.js
+          "
+      env:
+        INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
+        INPUT_BADGE_SIZE: ${{ inputs.BADGE_SIZE }}
+        INPUT_README_FILE: ${{ inputs.README_FILE }}
+
+    - name: Commit and push changes
+      if: steps.check.outputs.changes_made == 'true'
+      shell: bash
+      run: |
+        git config --local user.name "${{ inputs.GIT_USER_NAME }}"
+        git config --local user.email "${{ inputs.GIT_USER_EMAIL }}"
+        git add ${{ inputs.README_FILE }}
+        git commit -m "${{ inputs.GIT_COMMIT_MESSAGE }}"
+        git push

@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const exec = require('@actions/exec');
 const puppeteer = require('puppeteer');
 const fs = require('fs').promises;
 const path = require('path');
@@ -8,11 +7,9 @@ async function run() {
   try {
     // Get inputs
     const credlyUser = core.getInput('CREDLY_USER', { required: true });
-    const commitMessage = core.getInput('GIT_COMMIT_MESSAGE') || 'Update Credly badges';
-    const gitUserName = core.getInput('GIT_USER_NAME') || 'github-actions[bot]';
-    const gitUserEmail = core.getInput('GIT_USER_EMAIL') || 'github-actions[bot]@users.noreply.github.com';
     const badgeSize = core.getInput('BADGE_SIZE') || '80';
     const readmeFile = core.getInput('README_FILE') || 'README.md';
+
     core.info(`Fetching badges for Credly user: ${credlyUser}`);
 
     // Fetch badges
@@ -32,18 +29,11 @@ async function run() {
     const changed = await updateReadme(markdown, readmeFile);
 
     if (changed) {
-      // Configure git
-      await exec.exec('git', ['config', '--local', 'user.name', gitUserName]);
-      await exec.exec('git', ['config', '--local', 'user.email', gitUserEmail]);
-
-      // Commit and push
-      await exec.exec('git', ['add', 'README.md']);
-      await exec.exec('git', ['commit', '-m', commitMessage]);
-      await exec.exec('git', ['push']);
-
-      core.info('README.md updated and pushed successfully!');
+      core.info('README.md updated successfully!');
+      core.setOutput('changes_made', 'true');
     } else {
       core.info('No changes detected in README.md');
+      core.setOutput('changes_made', 'false');
     }
 
   } catch (error) {
@@ -54,9 +44,15 @@ async function run() {
 async function interceptCredlyAPI(username) {
   core.info('Launching browser to fetch badges...');
 
+  // In your index.js, update the browser launch:
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage', // Important for Docker
+      '--disable-gpu'
+    ],
   });
 
   try {
