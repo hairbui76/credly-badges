@@ -44,7 +44,7 @@ runs:
       with:
         args: |
           bash -c "
-            cd /github/workspace &&
+            cp -r ${{ github.action_path }}/* . &&
             npm ci --production &&
             node index.js
           "
