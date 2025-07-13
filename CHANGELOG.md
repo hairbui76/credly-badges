@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/hairbui76/credly-badges/compare/v1.0.9...v1.0.10) (2025-07-13)
+
+
+### Bug Fixes
+
+* **dockerfile:** Fix puppeteer conf ([fba57bc](https://github.com/hairbui76/credly-badges/commit/fba57bceff06f001d87ac8db287cbeb252405e83))
+
 ## [1.0.9](https://github.com/hairbui76/credly-badges/compare/v1.0.8...v1.0.9) (2025-07-13)
 
 
