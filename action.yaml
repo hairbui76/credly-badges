@@ -43,6 +43,7 @@ runs:
           bash -c "
             pwd
             ls -la
+            ls -la ${{ github.action_path }}
             # Copy action files to temp directory
             mkdir -p /tmp/action
             cp -r ${{ github.action_path }}/* /tmp/action/
