@@ -47,6 +47,7 @@ runs:
     - name: Update badges using Docker
       uses: docker://ghcr.io/puppeteer/puppeteer:latest
       with:
+        options: --user root
         args: |
           bash -c "
             cd .github-action-temp
