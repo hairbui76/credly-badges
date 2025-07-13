@@ -36,29 +36,45 @@ runs:
     - name: Checkout user's repository
       uses: actions/checkout@v4
 
-    - name: Copy action files to workspace
+    - name: Update badges using Docker
       shell: bash
       run: |
-        # Create a hidden directory for action files
-        mkdir -p .github-action-temp
-        cp -r ${{ github.action_path }}/* .github-action-temp/
-        cd .github-action-temp
-        npm ci --production
+        # Create temporary directory for action files
+        TEMP_DIR=$(mktemp -d)
+        cp -r ${{ github.action_path }}/* $TEMP_DIR/
 
-    - name: Update badges using Docker
-      uses: docker://ghcr.io/puppeteer/puppeteer:latest
-      with:
-        options: --user root
-        args: |
-          bash -c "
-            cd .github-action-temp
-            node index.js
+        # Run Docker with proper permissions
+        docker run --rm \
+          --user root \
+          -v ${{ github.workspace }}:/workspace \
+          -v $TEMP_DIR:/action \
+          -w /workspace \
+          -e INPUT_CREDLY_USER="${{ inputs.CREDLY_USER }}" \
+          -e INPUT_BADGE_SIZE="${{ inputs.BADGE_SIZE }}" \
+          -e INPUT_README_FILE="${{ inputs.README_FILE }}" \
+          -e GITHUB_WORKSPACE="/workspace" \
+          -e RUNNING_IN_DOCKER="true" \
+          --entrypoint /bin/bash \
+          ghcr.io/puppeteer/puppeteer:latest \
+          -c "
+            cd /action && \
+            npm ci --production && \
+            node index.js && \
+            chown $(id -u):$(id -g) /workspace/${{ inputs.README_FILE }} 2>/dev/null || true
           "
-      env:
-        INPUT_CREDLY_USER: ${{ inputs.CREDLY_USER }}
-        INPUT_BADGE_SIZE: ${{ inputs.BADGE_SIZE }}
-        INPUT_README_FILE: ${{ inputs.README_FILE }}
-        GITHUB_WORKSPACE: /github/workspace
+
+        # Cleanup
+        rm -rf $TEMP_DIR
+
+    - name: Check if changes were made
+      id: check
+      shell: bash
+      run: |
+        if git diff --quiet ${{ inputs.README_FILE }}; then
+          echo "changes_made=false" >> $GITHUB_OUTPUT
+        else
+          echo "changes_made=true" >> $GITHUB_OUTPUT
+        fi
 
     - name: Commit and push changes
       if: steps.check.outputs.changes_made == 'true'

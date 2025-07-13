@@ -18,8 +18,5 @@ RUN npm ci --production
 # Copy action files
 COPY . .
 
-# Switch back to pptruser for running Puppeteer
-USER pptruser
-
 # Set the entrypoint
 ENTRYPOINT ["node", "/action/index.js"]
