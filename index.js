@@ -111,9 +111,22 @@ function generateBadgesMarkdown(badgesData, size) {
 
   let markdown = '\n';
 
-  const badges = badgesData.sort((a, b) =>
-    new Date(b.issued_at_date) - new Date(a.issued_at_date)
-  );
+  // sort by type_category, certification first, then learning, then other
+  const badges = badgesData.sort((a, b) => {
+    if (a.badge_template.type_category === "Certification" && b.badge_template.type_category !== "Certification") {
+      return -1;
+    }
+    if (b.badge_template.type_category === "Certification" && a.badge_template.type_category !== "Certification") {
+      return 1;
+    }
+    if (a.badge_template.type_category === "Learning" && b.badge_template.type_category !== "Learning") {
+      return -1;
+    }
+    if (b.badge_template.type_category === "Learning" && a.badge_template.type_category !== "Learning") {
+      return 1;
+    }
+    return new Date(b.issued_at_date) - new Date(a.issued_at_date);
+  });
 
   badges.forEach(badge => {
     const badgeUrl = `https://www.credly.com/badges/${badge.id}`;
