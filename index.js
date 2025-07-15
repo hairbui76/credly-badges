@@ -132,7 +132,11 @@ function generateBadgesMarkdown(badgesData, size) {
   });
 
   markdown += '\n\n';
-  markdown += `*Last updated: ${new Date().toUTCString()}*\n`;
+  markdown += `*Last updated: ${new Intl.DateTimeFormat("en-US", {
+    dateStyle: "full",
+    timeStyle: "long",
+    timeZone: "Asia/Ho_Chi_Minh",
+  }).format(new Date())}*\n`;
 
   return markdown;
 }
